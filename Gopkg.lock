@@ -69,8 +69,8 @@
   revision = "25d852aebe32c875e9c044af3eef9c7dc6bc777f"
 
 [[projects]]
-  branch = "master"
-  digest = "1:f2448b52a81ba466f07eac7a20b6e81cc69cba3048ec0c2e7865f0a1f50a56bc"
+  branch = "tags"
+  digest = "1:eccf40cd4f5cc3e693db79b6235233d4397153284a2e964050cfdc6a1a48438c"
   name = "github.com/giantswarm/apiextensions"
   packages = [
     "pkg/apis/application/v1alpha1",
@@ -89,7 +89,7 @@
     "pkg/clientset/versioned/typed/release/v1alpha1",
   ]
   pruneopts = "UT"
-  revision = "71155aa0f5b7e5e88f31764039e27752c6aee580"
+  revision = "589eb8afc773e35aea2fd674ee3168f4b5802b29"
 
 [[projects]]
   branch = "master"
@@ -98,14 +98,6 @@
   packages = ["."]
   pruneopts = "UT"
   revision = "4dd4911251929a0ac4c4f3d8c4bda482a9e09f30"
-
-[[projects]]
-  branch = "master"
-  digest = "1:5164d17414266145c643e4997dacbc32e6e1ad552c3c70a78837f64d9a0140ea"
-  name = "github.com/giantswarm/exporterkit"
-  packages = ["collector"]
-  pruneopts = "UT"
-  revision = "9749deade60f7624620aa7158a4f38c87ea23795"
 
 [[projects]]
   branch = "master"
