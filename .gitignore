@@ -1,4 +1,4 @@
 *.swp
 TODO
-aws-tag-operator
+/aws-tag-operator
 !vendor/**
