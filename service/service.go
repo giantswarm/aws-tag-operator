@@ -31,8 +31,8 @@ type Config struct {
 type Service struct {
 	Version *version.Service
 
-	bootOnce       sync.Once
-	todoController *controller.TODO
+	bootOnce             sync.Once
+	awsTagListController *controller.AWSTagList
 }
 
 // New creates a new configured service object.
@@ -87,15 +87,15 @@ func New(config Config) (*Service, error) {
 		}
 	}
 
-	var todoController *controller.TODO
+	var awsTagListController *controller.AWSTagList
 	{
 
-		c := controller.TODOConfig{
+		c := controller.AWSTagListConfig{
 			K8sClient: k8sClient,
 			Logger:    config.Logger,
 		}
 
-		todoController, err = controller.NewTODO(c)
+		awsTagListController, err = controller.NewAWSTagList(c)
 		if err != nil {
 			return nil, microerror.Mask(err)
 		}
@@ -121,8 +121,8 @@ func New(config Config) (*Service, error) {
 	s := &Service{
 		Version: versionService,
 
-		bootOnce:       sync.Once{},
-		todoController: todoController,
+		bootOnce:             sync.Once{},
+		awsTagListController: awsTagListController,
 	}
 
 	return s, nil
@@ -130,6 +130,6 @@ func New(config Config) (*Service, error) {
 
 func (s *Service) Boot(ctx context.Context) {
 	s.bootOnce.Do(func() {
-		go s.todoController.Boot(ctx)
+		go s.awsTagListController.Boot(ctx)
 	})
 }

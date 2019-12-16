@@ -12,12 +12,12 @@ import (
 	"github.com/giantswarm/aws-tag-operator/service/controller/resource/test"
 )
 
-type todoResourceSetConfig struct {
+type awsTagListResourceSetConfig struct {
 	K8sClient k8sclient.Interface
 	Logger    micrologger.Logger
 }
 
-func newTODOResourceSet(config todoResourceSetConfig) (*controller.ResourceSet, error) {
+func newAWSTagListResourceSet(config awsTagListResourceSetConfig) (*controller.ResourceSet, error) {
 	var err error
 
 	var testResource resource.Interface
