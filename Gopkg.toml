@@ -101,10 +101,12 @@ required = [
   version = "v1.5.2"
 
 [[override]]
-source = "gopkg.in/fsnotify/fsnotify.v1"
-name = "gopkg.in/fsnotify.v1"
+  source = "gopkg.in/fsnotify/fsnotify.v1"
+  name = "gopkg.in/fsnotify.v1"
 
-
+[[override]]
+  branch = "tags"
+  name = "github.com/giantswarm/apiextensions"
 
 
 [prune]
