@@ -27,14 +27,13 @@ required = [
 ]
 
 
+[[constraint]]
+  name = "github.com/aws/aws-sdk-go"
+  version = "=1.14.7"
 
 [[constraint]]
   branch = "master"
   name = "github.com/docker/distribution"
-
-[[constraint]]
-  branch = "master"
-  name = "github.com/giantswarm/exporterkit"
 
 [[constraint]]
   branch = "master"
@@ -71,6 +70,10 @@ required = [
 [[constraint]]
   branch = "master"
   name = "github.com/giantswarm/versionbundle"
+
+[[override]]
+  name = "sigs.k8s.io/cluster-api"
+  version = "=v0.1.10"
 
 [[override]]
   name = "k8s.io/apiextensions-apiserver"

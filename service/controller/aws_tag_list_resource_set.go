@@ -9,7 +9,7 @@ import (
 	"github.com/giantswarm/operatorkit/resource/wrapper/metricsresource"
 	"github.com/giantswarm/operatorkit/resource/wrapper/retryresource"
 
-	"github.com/giantswarm/aws-tag-operator/service/controller/resource/test"
+	test "github.com/giantswarm/aws-tag-operator/service/controller/resource/awstaglist"
 )
 
 type awsTagListResourceSetConfig struct {
