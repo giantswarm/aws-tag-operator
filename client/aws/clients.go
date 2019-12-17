@@ -63,7 +63,6 @@ func NewClients(config Config) (Clients, error) {
 }
 
 func newClients(session *session.Session, configs ...*aws.Config) Clients {
-	supportConfigs := append(configs, aws.NewConfig().WithRegion(trustedAdvisorRegion))
 
 	c := Clients{
 		EC2: ec2.New(session, configs...),

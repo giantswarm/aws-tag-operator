@@ -1,4 +1,4 @@
-package test
+package awstaglist
 
 import (
 	"github.com/giantswarm/microerror"

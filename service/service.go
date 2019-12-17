@@ -91,8 +91,8 @@ func New(config Config) (*Service, error) {
 	var awsConfig aws.Config
 	{
 		awsConfig = aws.Config{
-			AccessKeyID:     config.Viper.GetString(config.Flag.Service.AWS.AccessKeyID),
-			AccessKeySecret: config.Viper.GetString(config.Flag.Service.AWS.AccessKeySecret),
+			AccessKeyID:     config.Viper.GetString(config.Flag.Service.AWS.AccessKey.ID),
+			AccessKeySecret: config.Viper.GetString(config.Flag.Service.AWS.AccessKey.Secret),
 			Region:          config.Viper.GetString(config.Flag.Service.AWS.Region),
 		}
 	}

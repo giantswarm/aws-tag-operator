@@ -1,13 +1,13 @@
 package credential
 
 import (
+	"github.com/giantswarm/apiextensions/pkg/apis/core/v1alpha1"
 	"github.com/giantswarm/microerror"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
-	"sigs.k8s.io/cluster-api/pkg/apis/cluster/v1alpha1"
 
-	"github.com/giantswarm/aws-tag-operator/service/controller/key"
+	"github.com/giantswarm/aws-tag-operator/service/key"
 )
 
 const (
@@ -21,7 +21,7 @@ const (
 	DefaultNamespace = "giantswarm"
 )
 
-func GetARN(k8sClient kubernetes.Interface, cr v1alpha1.Cluster) (string, error) {
+func GetARN(k8sClient kubernetes.Interface, cr v1alpha1.AWSClusterConfig) (string, error) {
 	var err error
 
 	var credential *corev1.Secret

@@ -7,15 +7,17 @@ import (
 	"github.com/giantswarm/micrologger"
 	"github.com/giantswarm/operatorkit/controller"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/client-go/kubernetes"
 
 	"github.com/giantswarm/aws-tag-operator/client/aws"
 	"github.com/giantswarm/aws-tag-operator/pkg/project"
 )
 
 type AWSTagListConfig struct {
-	HostAWSConfig aws.Config
-	K8sClient     k8sclient.Interface
-	Logger        micrologger.Logger
+	AWSConfig    aws.Config
+	K8sAWSClient kubernetes.Interface
+	K8sClient    k8sclient.Interface
+	Logger       micrologger.Logger
 }
 
 type AWSTagList struct {
@@ -65,9 +67,10 @@ func newAWSTagListResourceSets(config AWSTagListConfig) ([]*controller.ResourceS
 	var resourceSet *controller.ResourceSet
 	{
 		c := awsTagListResourceSetConfig{
-			K8sClient:     config.K8sClient,
-			HostAWSConfig: config.HostAWSConfig,
-			Logger:        config.Logger,
+			AWSConfig:    config.AWSConfig,
+			K8sAWSClient: config.K8sAWSClient,
+			K8sClient:    config.K8sClient,
+			Logger:       config.Logger,
 		}
 
 		resourceSet, err = newAWSTagListResourceSet(c)

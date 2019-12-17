@@ -15,10 +15,6 @@ type Context struct {
 	// specific actions.
 	Client ContextClient
 
-	// Spec holds the desired state we compute in a resource and then keep
-	// inside the context to be used in a different resource.
-	Spec ContextSpec
-
 	// Status holds the data used to communicate between controller's
 	// resources. It can be edited in place as Context is stored as
 	// a pointer within context.Context. The content of the status should
