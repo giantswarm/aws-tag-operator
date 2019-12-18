@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"github.com/giantswarm/aws-operator/service/controller/resource/awsclient"
 	"github.com/giantswarm/k8sclient"
 	"github.com/giantswarm/microerror"
 	"github.com/giantswarm/micrologger"
@@ -9,38 +8,19 @@ import (
 	"github.com/giantswarm/operatorkit/resource"
 	"github.com/giantswarm/operatorkit/resource/wrapper/metricsresource"
 	"github.com/giantswarm/operatorkit/resource/wrapper/retryresource"
-	"k8s.io/client-go/kubernetes"
 
 	"github.com/giantswarm/aws-tag-operator/client/aws"
 	"github.com/giantswarm/aws-tag-operator/service/controller/resource/awstaglist"
-	"github.com/giantswarm/aws-tag-operator/service/key"
 )
 
 type awsTagListResourceSetConfig struct {
-	AWSConfig    aws.Config
-	K8sClient    k8sclient.Interface
-	K8sAWSClient kubernetes.Interface
-	Logger       micrologger.Logger
+	AWSConfig aws.Config
+	K8sClient k8sclient.Interface
+	Logger    micrologger.Logger
 }
 
 func newAWSTagListResourceSet(config awsTagListResourceSetConfig) (*controller.ResourceSet, error) {
 	var err error
-
-	var awsClientResource resource.Interface
-	{
-		c := awsclient.Config{
-			K8sClient:     config.K8sAWSClient,
-			Logger:        config.Logger,
-			ToClusterFunc: key.ToCluster,
-
-			AWSConfig: config.AWSConfig,
-		}
-
-		awsClientResource, err = awsclient.New(c)
-		if err != nil {
-			return nil, microerror.Mask(err)
-		}
-	}
 
 	var awsTagListResource resource.Interface
 	{
@@ -56,7 +36,6 @@ func newAWSTagListResourceSet(config awsTagListResourceSetConfig) (*controller.R
 	}
 
 	resources := []resource.Interface{
-		awsClientResource,
 		awsTagListResource,
 	}
 
