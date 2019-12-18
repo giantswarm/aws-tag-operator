@@ -14,9 +14,8 @@ func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
 		return microerror.Mask(err)
 	}
 
-	for cn := range al.Spec.ClusterIDCollection {
-
-		err = r.addAWSClientsToContext(ctx, "")
+	for _, cn := range al.Spec.ClusterIDCollection {
+		err = r.addAWSClientsToContext(ctx, cn)
 		if err != nil {
 			return microerror.Mask(err)
 		}

@@ -57,7 +57,7 @@ func (r *Resource) addAWSClientsToContext(ctx context.Context, cn string) error 
 	}
 
 	{
-		arn, err := credential.GetARN(r.k8sClient, cn)
+		arn, err := credential.GetARN(r.k8sClient.K8sClient(), cn)
 		if err != nil {
 			return microerror.Mask(err)
 		}
