@@ -5,9 +5,5 @@ import (
 )
 
 type ContextClient struct {
-	Cluster ContextClientCluster
-}
-
-type ContextClientCluster struct {
 	AWS aws.Clients
 }

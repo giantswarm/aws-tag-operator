@@ -13,7 +13,6 @@ import (
 	"github.com/giantswarm/micrologger"
 	"github.com/giantswarm/versionbundle"
 	"github.com/spf13/viper"
-	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 
 	"github.com/giantswarm/aws-tag-operator/client/aws"
@@ -75,11 +74,6 @@ func New(config Config) (*Service, error) {
 		}
 	}
 
-	k8sAWSClient, err := kubernetes.NewForConfig(restConfig)
-	if err != nil {
-		return nil, microerror.Mask(err)
-	}
-
 	var k8sClient k8sclient.Interface
 	{
 		c := k8sclient.ClientsConfig{
@@ -107,10 +101,9 @@ func New(config Config) (*Service, error) {
 	{
 
 		c := controller.AWSTagListConfig{
-			AWSConfig:    awsConfig,
-			K8sAWSClient: k8sAWSClient,
-			K8sClient:    k8sClient,
-			Logger:       config.Logger,
+			AWSConfig: awsConfig,
+			K8sClient: k8sClient,
+			Logger:    config.Logger,
 		}
 
 		awsTagListController, err = controller.NewAWSTagList(c)

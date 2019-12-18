@@ -1,7 +1,6 @@
 package credential
 
 import (
-	"github.com/giantswarm/apiextensions/pkg/apis/core/v1alpha1"
 	"github.com/giantswarm/microerror"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -21,17 +20,17 @@ const (
 	DefaultNamespace = "giantswarm"
 )
 
-func GetARN(k8sClient kubernetes.Interface, cr v1alpha1.AWSClusterConfig) (string, error) {
+func GetARN(k8sClient kubernetes.Interface, clusterName string) (string, error) {
 	var err error
 
 	var credential *corev1.Secret
 	{
-		credentialName := key.CredentialName(cr)
+		credentialName := key.CredentialName(clusterName)
 		if credentialName == "" {
 			return "", microerror.Mask(credentialNameEmpty)
 		}
 
-		credentialNamespace := key.CredentialNamespace(cr)
+		credentialNamespace := key.CredentialNamespace()
 		if credentialName == "" {
 			return "", microerror.Mask(credentialNamespaceEmpty)
 		}

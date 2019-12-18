@@ -1,26 +1,26 @@
 package key
 
 import (
-	"github.com/giantswarm/apiextensions/pkg/apis/core/v1alpha1"
+	"github.com/giantswarm/apiextensions/pkg/apis/provider/v1alpha1"
 	"github.com/giantswarm/microerror"
 )
 
-func CredentialName(cluster v1alpha1.AWSClusterConfig) string {
-	return cluster.Spec.Guest.CredentialSecret.Name
+func CredentialName(clusterName string) string {
+	return clusterName
 }
 
-func CredentialNamespace(cluster v1alpha1.AWSClusterConfig) string {
-	return cluster.Spec.Guest.CredentialSecret.Namespace
+func CredentialNamespace() string {
+	return "giantswarm"
 }
 
-func ToCluster(v interface{}) (v1alpha1.AWSClusterConfig, error) {
+func ToCluster(v interface{}) (v1alpha1.AWSTagList, error) {
 	if v == nil {
-		return v1alpha1.AWSClusterConfig{}, microerror.Maskf(wrongTypeError, "expected '%T', got '%T'", &v1alpha1.AWSClusterConfig{}, v)
+		return v1alpha1.AWSTagList{}, microerror.Maskf(wrongTypeError, "expected '%T', got '%T'", &v1alpha1.AWSTagList{}, v)
 	}
 
-	p, ok := v.(*v1alpha1.AWSClusterConfig)
+	p, ok := v.(*v1alpha1.AWSTagList)
 	if !ok {
-		return v1alpha1.AWSClusterConfig{}, microerror.Maskf(wrongTypeError, "expected '%T', got '%T'", &v1alpha1.AWSClusterConfig{}, v)
+		return v1alpha1.AWSTagList{}, microerror.Maskf(wrongTypeError, "expected '%T', got '%T'", &v1alpha1.AWSTagList{}, v)
 	}
 
 	c := p.DeepCopy()

@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"github.com/giantswarm/aws-operator/service/controller/resource/awsclient"
 	"github.com/giantswarm/k8sclient"
 	"github.com/giantswarm/microerror"
 	"github.com/giantswarm/micrologger"
@@ -11,7 +12,6 @@ import (
 	"k8s.io/client-go/kubernetes"
 
 	"github.com/giantswarm/aws-tag-operator/client/aws"
-	"github.com/giantswarm/aws-tag-operator/service/controller/resource/awsclient"
 	"github.com/giantswarm/aws-tag-operator/service/controller/resource/awstaglist"
 	"github.com/giantswarm/aws-tag-operator/service/key"
 )
