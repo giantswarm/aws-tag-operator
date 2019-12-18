@@ -16,7 +16,7 @@ import (
 	"github.com/spf13/viper"
 	"k8s.io/client-go/rest"
 
-	"github.com/giantswarm/aws-tag-operator/client/aws"
+	awsclients "github.com/giantswarm/aws-tag-operator/client/aws"
 	"github.com/giantswarm/aws-tag-operator/flag"
 	"github.com/giantswarm/aws-tag-operator/pkg/project"
 	"github.com/giantswarm/aws-tag-operator/service/controller"
@@ -92,12 +92,17 @@ func New(config Config) (*Service, error) {
 		}
 	}
 
-	var awsConfig aws.Config
+	var AWSClients awsclients.Interface
 	{
-		awsConfig = aws.Config{
+		c := awsclients.Config{
 			AccessKeyID:     config.Viper.GetString(config.Flag.Service.AWS.AccessKey.ID),
 			AccessKeySecret: config.Viper.GetString(config.Flag.Service.AWS.AccessKey.Secret),
 			Region:          config.Viper.GetString(config.Flag.Service.AWS.Region),
+		}
+
+		AWSClients, err = awsclients.NewClients(c)
+		if err != nil {
+			return nil, microerror.Mask(err)
 		}
 	}
 
@@ -105,9 +110,9 @@ func New(config Config) (*Service, error) {
 	{
 
 		c := controller.AWSTagListConfig{
-			AWSConfig: awsConfig,
-			K8sClient: k8sClient,
-			Logger:    config.Logger,
+			AWSClients: AWSClients,
+			K8sClient:  k8sClient,
+			Logger:     config.Logger,
 		}
 
 		awsTagListController, err = controller.NewAWSTagList(c)

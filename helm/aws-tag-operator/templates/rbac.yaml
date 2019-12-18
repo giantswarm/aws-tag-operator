@@ -6,14 +6,8 @@ rules:
   - apiGroups:
       - ""
     resources:
-      - pods
-    verbs:
-      - "*"
-  - apiGroups:
-      - ""
-    resources:
       - configmaps
-      - namespaces
+      - secrets
     verbs:
       - create
       - update
@@ -21,29 +15,16 @@ rules:
       - get
       - list
   - apiGroups:
-      - ""
+      - "provider.giantswarm.io"
     resources:
-      - serviceaccounts
+      - awstaglists
     verbs:
       - create
-  - apiGroups:
-      - "networking.k8s.io"
-    resources:
-      - networkpolicies
-    verbs:
-      - create
-  - apiGroups:
-      - "rbac.authorization.k8s.io"
-    resources:
-      - clusterrolebindings
-    verbs:
-      - create
-  - apiGroups:
-      - apiextensions.k8s.io
-    resources:
-      - customresourcedefinitions
-    verbs:
-      - "*"
+      - watch
+      - update
+      - delete
+      - get
+      - list
   - nonResourceURLs:
       - "/"
       - "/healthz"

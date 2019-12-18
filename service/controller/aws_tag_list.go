@@ -13,9 +13,9 @@ import (
 )
 
 type AWSTagListConfig struct {
-	AWSConfig aws.Config
-	K8sClient k8sclient.Interface
-	Logger    micrologger.Logger
+	AWSClients aws.Interface
+	K8sClient  k8sclient.Interface
+	Logger     micrologger.Logger
 }
 
 type AWSTagList struct {
@@ -65,9 +65,9 @@ func newAWSTagListResourceSets(config AWSTagListConfig) ([]*controller.ResourceS
 	var resourceSet *controller.ResourceSet
 	{
 		c := awsTagListResourceSetConfig{
-			AWSConfig: config.AWSConfig,
-			K8sClient: config.K8sClient,
-			Logger:    config.Logger,
+			AWSClients: config.AWSClients,
+			K8sClient:  config.K8sClient,
+			Logger:     config.Logger,
 		}
 
 		resourceSet, err = newAWSTagListResourceSet(c)

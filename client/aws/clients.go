@@ -21,19 +21,27 @@ type Config struct {
 }
 
 type Clients struct {
-	EC2 ec2iface.EC2API
-	STS stsiface.STSAPI
+	ec2Client ec2iface.EC2API
+	stsClient stsiface.STSAPI
 }
 
-func NewClients(config Config) (Clients, error) {
+func (c *Clients) EC2Client() ec2iface.EC2API {
+	return c.ec2Client
+}
+
+func (c *Clients) STSClient() stsiface.STSAPI {
+	return c.stsClient
+}
+
+func NewClients(config Config) (*Clients, error) {
 	if config.AccessKeyID == "" {
-		return Clients{}, microerror.Maskf(invalidConfigError, "%T.AccessKeyID must not be empty", config)
+		return &Clients{}, microerror.Maskf(invalidConfigError, "%T.AccessKeyID must not be empty", config)
 	}
 	if config.AccessKeySecret == "" {
-		return Clients{}, microerror.Maskf(invalidConfigError, "%T.AccessKeySecret must not be empty", config)
+		return &Clients{}, microerror.Maskf(invalidConfigError, "%T.AccessKeySecret must not be empty", config)
 	}
 	if config.Region == "" {
-		return Clients{}, microerror.Maskf(invalidConfigError, "%T.Region must not be empty", config)
+		return &Clients{}, microerror.Maskf(invalidConfigError, "%T.Region must not be empty", config)
 	}
 
 	var err error
@@ -47,7 +55,7 @@ func NewClients(config Config) (Clients, error) {
 
 		s, err = session.NewSession(c)
 		if err != nil {
-			return Clients{}, microerror.Mask(err)
+			return &Clients{}, microerror.Mask(err)
 		}
 	}
 
@@ -59,14 +67,14 @@ func NewClients(config Config) (Clients, error) {
 		c = newClients(s)
 	}
 
-	return c, nil
+	return &c, nil
 }
 
 func newClients(session *session.Session, configs ...*aws.Config) Clients {
 
 	c := Clients{
-		EC2: ec2.New(session, configs...),
-		STS: sts.New(session, configs...),
+		ec2Client: ec2.New(session, configs...),
+		stsClient: sts.New(session, configs...),
 	}
 
 	return c
