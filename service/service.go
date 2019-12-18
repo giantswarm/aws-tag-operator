@@ -6,6 +6,7 @@ import (
 	"context"
 	"sync"
 
+	"github.com/giantswarm/apiextensions/pkg/apis/provider/v1alpha1"
 	"github.com/giantswarm/k8sclient"
 	"github.com/giantswarm/k8sclient/k8srestconfig"
 	"github.com/giantswarm/microendpoint/service/version"
@@ -78,6 +79,9 @@ func New(config Config) (*Service, error) {
 	{
 		c := k8sclient.ClientsConfig{
 			Logger: config.Logger,
+			SchemeBuilder: k8sclient.SchemeBuilder{
+				v1alpha1.AddToScheme,
+			},
 
 			RestConfig: restConfig,
 		}
