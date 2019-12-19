@@ -61,8 +61,8 @@ func newAWSTagListResourceSet(config awsTagListResourceSetConfig) (*controller.R
 	}
 
 	handlesFunc := func(obj interface{}) bool {
-
-		return false
+		//For now reconcile all CRs
+		return true
 	}
 
 	var resourceSet *controller.ResourceSet
