@@ -22,7 +22,7 @@ type Resource struct {
 	logger    micrologger.Logger
 	k8sClient k8sclient.Interface
 
-	AWSClients aws.Interface
+	awsClients aws.Interface
 }
 
 func New(config Config) (*Resource, error) {
@@ -49,7 +49,7 @@ func (r *Resource) Name() string {
 	return Name
 }
 
-func (r *Resource) ToAWSTagList(v interface{}) (v1alpha1.AWSTagList, error) {
+func (r *Resource) toAWSTagList(v interface{}) (v1alpha1.AWSTagList, error) {
 	if v == nil {
 		return v1alpha1.AWSTagList{}, microerror.Maskf(wrongTypeError, "expected '%T', got '%T'", &v1alpha1.AWSTagList{}, v)
 	}
