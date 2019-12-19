@@ -25,12 +25,7 @@ rules:
     resources:
       - awstaglists
     verbs:
-      - create
-      - watch
-      - update
-      - delete
-      - get
-      - list
+      - "*"
   - nonResourceURLs:
       - "/"
       - "/healthz"
