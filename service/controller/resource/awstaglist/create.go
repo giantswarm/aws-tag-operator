@@ -20,7 +20,7 @@ func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
 	}
 
 	i := &ec2.DescribeVolumesInput{}
-	o, err := r.AWSClients.EC2Client().DescribeVolumes(i)
+	o, err := r.awsClients.EC2Client().DescribeVolumes(i)
 	if err != nil {
 		return microerror.Mask(err)
 	}

@@ -36,7 +36,7 @@ func New(config Config) (*Resource, error) {
 	}
 
 	r := &Resource{
-		AWSClients: config.AWSClients,
+		awsClients: config.AWSClients,
 		logger:     config.Logger,
 		k8sClient:  config.K8sClient,
 	}
