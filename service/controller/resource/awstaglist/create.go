@@ -27,6 +27,10 @@ func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
 		fmt.Printf("Key: %s, Value: %s\n", t.Key, t.Value)
 	}
 
+	if len(tags) <= 0 {
+		return nil
+	}
+
 	pvList, err := r.k8sClient.K8sClient().CoreV1().PersistentVolumes().List(metav1.ListOptions{})
 	if err != nil {
 		return microerror.Mask(err)
