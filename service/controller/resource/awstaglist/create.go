@@ -4,18 +4,27 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/giantswarm/microerror"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
+	fmt.Printf("obj: %+v\n", obj)
 	al, err := r.toAWSTagList(obj)
 	if err != nil {
 		return microerror.Mask(err)
 	}
 
-	for _, tag := range al.Spec.TagCollection {
-		fmt.Printf("Key: %s, Value: %s", tag.Key, tag.Value)
+	tags := []*ec2.Tag{}
+	for _, t := range al.Spec.TagCollection {
+		tag := ec2.Tag{
+			Key:   aws.String(t.Key),
+			Value: aws.String(t.Value),
+		}
+		tags = append(tags, &tag)
+		fmt.Printf("Key: %s, Value: %s\n", t.Key, t.Value)
 	}
 
 	pvList, err := r.k8sClient.K8sClient().CoreV1().PersistentVolumes().List(metav1.ListOptions{})
@@ -23,18 +32,22 @@ func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
 		return microerror.Mask(err)
 	}
 
+	volumes := []*string{}
 	for _, pv := range pvList.Items {
-		fmt.Println(pv.Spec.AWSElasticBlockStore.VolumeID)
+		volumes = append(volumes, &pv.Spec.AWSElasticBlockStore.VolumeID)
 	}
-	// i := &ec2.DescribeVolumesInput{}
-	// o, err := r.awsClients.EC2Client().DescribeVolumes(i)
-	// if err != nil {
-	// 	return microerror.Mask(err)
-	// }
 
-	// for _, v := range o.Volumes {
-	// 	fmt.Println(v.GoString())
-	// }
+	input := &ec2.CreateTagsInput{
+		Resources: volumes,
+		Tags:      tags,
+	}
+
+	result, err := r.awsClients.EC2Client().CreateTags(input)
+	if err != nil {
+		return microerror.Mask(err)
+	}
+
+	fmt.Println(result)
 
 	return nil
 }
