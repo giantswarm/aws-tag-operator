@@ -38,7 +38,9 @@ func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
 
 	volumes := []*string{}
 	for _, pv := range pvList.Items {
-		volumes = append(volumes, &pv.Spec.AWSElasticBlockStore.VolumeID)
+		v := pv.Spec.AWSElasticBlockStore.VolumeID
+		vc := v[len(v)-21:]
+		volumes = append(volumes, &vc)
 	}
 
 	input := &ec2.CreateTagsInput{
