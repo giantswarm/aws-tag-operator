@@ -39,6 +39,15 @@ spec:
           items:
           - key: config.yml
             path: config.yml
+      - name: {{ .Values.project.name }}-secret
+        secret:
+          secretName: {{ tpl .Values.resource.default.name  . }}
+          items:
+          - key: secret.yaml
+            path: secret.yaml
+      - name: certs
+        hostPath:
+          path: /etc/ssl/certs/ca-certificates.crt
       serviceAccountName: {{ tpl .Values.resource.default.name  . }}
       securityContext:
         runAsUser: {{ .Values.pod.user.id }}
@@ -49,10 +58,17 @@ spec:
         args:
         - daemon
         - --config.dirs=/var/run/{{ .Values.project.name }}/configmap/
+        - --config.dirs=/var/run/{{ .Values.project.name }}/secret/
         - --config.files=config
+        - --config.files=secret
         volumeMounts:
         - name: {{ .Values.project.name }}-configmap
           mountPath: /var/run/{{ .Values.project.name }}/configmap/
+        - name: {{ .Values.project.name }}-secret
+          mountPath: /var/run/{{ .Values.project.name }}/secret/
+          readOnly: true
+        - name: certs
+          mountPath: /etc/ssl/certs/ca-certificates.crt
         livenessProbe:
           httpGet:
             path: /healthz
