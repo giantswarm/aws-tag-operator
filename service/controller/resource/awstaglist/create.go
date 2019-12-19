@@ -10,7 +10,7 @@ import (
 
 func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
 	fmt.Println("YOLO")
-	al, err := r.ToAWSTagList(obj)
+	al, err := r.toAWSTagList(obj)
 	if err != nil {
 		return microerror.Mask(err)
 	}

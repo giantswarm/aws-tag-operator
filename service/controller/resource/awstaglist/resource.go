@@ -13,27 +13,26 @@ const (
 )
 
 type Config struct {
+	AWSClients aws.Interface
 	K8sClient  k8sclient.Interface
 	Logger     micrologger.Logger
-	AWSClients aws.Interface
 }
 
 type Resource struct {
-	logger    micrologger.Logger
-	k8sClient k8sclient.Interface
-
 	awsClients aws.Interface
+	logger     micrologger.Logger
+	k8sClient  k8sclient.Interface
 }
 
 func New(config Config) (*Resource, error) {
 	if config.AWSClients == nil {
 		return nil, microerror.Maskf(invalidConfigError, "%T.AWSClients must not be empty", config)
 	}
-	if config.Logger == nil {
-		return nil, microerror.Maskf(invalidConfigError, "%T.Logger must not be empty", config)
-	}
 	if config.K8sClient == nil {
 		return nil, microerror.Maskf(invalidConfigError, "%T.K8sclient must not be empty", config)
+	}
+	if config.Logger == nil {
+		return nil, microerror.Maskf(invalidConfigError, "%T.Logger must not be empty", config)
 	}
 
 	r := &Resource{
