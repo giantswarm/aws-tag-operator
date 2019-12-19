@@ -9,32 +9,35 @@ import (
 	"github.com/giantswarm/operatorkit/resource/wrapper/metricsresource"
 	"github.com/giantswarm/operatorkit/resource/wrapper/retryresource"
 
-	"github.com/giantswarm/aws-tag-operator/service/controller/resource/test"
+	"github.com/giantswarm/aws-tag-operator/client/aws"
+	"github.com/giantswarm/aws-tag-operator/service/controller/resource/awstaglist"
 )
 
 type awsTagListResourceSetConfig struct {
-	K8sClient k8sclient.Interface
-	Logger    micrologger.Logger
+	AWSClients aws.Interface
+	K8sClient  k8sclient.Interface
+	Logger     micrologger.Logger
 }
 
 func newAWSTagListResourceSet(config awsTagListResourceSetConfig) (*controller.ResourceSet, error) {
 	var err error
 
-	var testResource resource.Interface
+	var awsTagListResource resource.Interface
 	{
-		c := test.Config{
-			K8sClient: config.K8sClient,
-			Logger:    config.Logger,
+		c := awstaglist.Config{
+			AWSClients: config.AWSClients,
+			K8sClient:  config.K8sClient,
+			Logger:     config.Logger,
 		}
 
-		testResource, err = test.New(c)
+		awsTagListResource, err = awstaglist.New(c)
 		if err != nil {
 			return nil, microerror.Mask(err)
 		}
 	}
 
 	resources := []resource.Interface{
-		testResource,
+		awsTagListResource,
 	}
 
 	{
@@ -58,8 +61,8 @@ func newAWSTagListResourceSet(config awsTagListResourceSetConfig) (*controller.R
 	}
 
 	handlesFunc := func(obj interface{}) bool {
-
-		return false
+		//For now reconcile all CRs
+		return true
 	}
 
 	var resourceSet *controller.ResourceSet

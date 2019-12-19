@@ -6,15 +6,16 @@ import (
 	"github.com/giantswarm/microerror"
 	"github.com/giantswarm/micrologger"
 	"github.com/giantswarm/operatorkit/controller"
-	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 
+	"github.com/giantswarm/aws-tag-operator/client/aws"
 	"github.com/giantswarm/aws-tag-operator/pkg/project"
 )
 
 type AWSTagListConfig struct {
-	K8sClient k8sclient.Interface
-	Logger    micrologger.Logger
+	AWSClients aws.Interface
+	K8sClient  k8sclient.Interface
+	Logger     micrologger.Logger
 }
 
 type AWSTagList struct {
@@ -37,12 +38,12 @@ func NewAWSTagList(config AWSTagListConfig) (*AWSTagList, error) {
 			Logger:       config.Logger,
 			ResourceSets: resourceSets,
 			NewRuntimeObjectFunc: func() runtime.Object {
-				return new(corev1.Pod)
+				return new(v1alpha1.AWSTagList)
 			},
 
 			// Name is used to compute finalizer names. This here results in something
-			// like operatorkit.giantswarm.io/aws-tag-operator-todo-controller.
-			Name: project.Name() + "-todo-controller",
+			// like operatorkit.giantswarm.io/aws-tag-operator.
+			Name: project.Name(),
 		}
 
 		operatorkitController, err = controller.New(c)
@@ -64,8 +65,9 @@ func newAWSTagListResourceSets(config AWSTagListConfig) ([]*controller.ResourceS
 	var resourceSet *controller.ResourceSet
 	{
 		c := awsTagListResourceSetConfig{
-			K8sClient: config.K8sClient,
-			Logger:    config.Logger,
+			AWSClients: config.AWSClients,
+			K8sClient:  config.K8sClient,
+			Logger:     config.Logger,
 		}
 
 		resourceSet, err = newAWSTagListResourceSet(c)

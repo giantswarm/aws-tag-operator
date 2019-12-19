@@ -6,6 +6,7 @@ import (
 	"context"
 	"sync"
 
+	"github.com/giantswarm/apiextensions/pkg/apis/provider/v1alpha1"
 	"github.com/giantswarm/k8sclient"
 	"github.com/giantswarm/k8sclient/k8srestconfig"
 	"github.com/giantswarm/microendpoint/service/version"
@@ -15,6 +16,7 @@ import (
 	"github.com/spf13/viper"
 	"k8s.io/client-go/rest"
 
+	awsclients "github.com/giantswarm/aws-tag-operator/client/aws"
 	"github.com/giantswarm/aws-tag-operator/flag"
 	"github.com/giantswarm/aws-tag-operator/pkg/project"
 	"github.com/giantswarm/aws-tag-operator/service/controller"
@@ -77,6 +79,9 @@ func New(config Config) (*Service, error) {
 	{
 		c := k8sclient.ClientsConfig{
 			Logger: config.Logger,
+			SchemeBuilder: k8sclient.SchemeBuilder{
+				v1alpha1.AddToScheme,
+			},
 
 			RestConfig: restConfig,
 		}
@@ -87,12 +92,27 @@ func New(config Config) (*Service, error) {
 		}
 	}
 
+	var AWSClients awsclients.Interface
+	{
+		c := awsclients.Config{
+			AccessKeyID:     config.Viper.GetString(config.Flag.Service.AWS.AccessKey.ID),
+			AccessKeySecret: config.Viper.GetString(config.Flag.Service.AWS.AccessKey.Secret),
+			Region:          config.Viper.GetString(config.Flag.Service.AWS.Region),
+		}
+
+		AWSClients, err = awsclients.NewClients(c)
+		if err != nil {
+			return nil, microerror.Mask(err)
+		}
+	}
+
 	var awsTagListController *controller.AWSTagList
 	{
 
 		c := controller.AWSTagListConfig{
-			K8sClient: k8sClient,
-			Logger:    config.Logger,
+			AWSClients: AWSClients,
+			K8sClient:  k8sClient,
+			Logger:     config.Logger,
 		}
 
 		awsTagListController, err = controller.NewAWSTagList(c)
