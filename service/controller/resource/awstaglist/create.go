@@ -11,7 +11,6 @@ import (
 )
 
 func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
-	fmt.Printf("obj: %+v\n", obj)
 	al, err := r.toAWSTagList(obj)
 	if err != nil {
 		return microerror.Mask(err)
@@ -36,11 +35,24 @@ func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
 		return microerror.Mask(err)
 	}
 
+	fmt.Printf("Volumes in cluster:\n")
 	volumes := []*string{}
 	for _, pv := range pvList.Items {
 		v := pv.Spec.AWSElasticBlockStore.VolumeID
 		vc := v[len(v)-21:]
+		fmt.Printf("vol: %s\n", vc)
 		volumes = append(volumes, &vc)
+	}
+
+	i := &ec2.DescribeVolumesInput{}
+	o, err := r.awsClients.EC2Client().DescribeVolumes(i)
+	if err != nil {
+		return microerror.Mask(err)
+	}
+
+	fmt.Printf("Volumes in AWS: \n")
+	for _, v := range o.Volumes {
+		fmt.Println(v.GoString())
 	}
 
 	input := &ec2.CreateTagsInput{
