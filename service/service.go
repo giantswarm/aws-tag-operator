@@ -95,8 +95,8 @@ func New(config Config) (*Service, error) {
 	var AWSClients awsclients.Interface
 	{
 		c := awsclients.Config{
-			AccessKeyID:     config.Viper.GetString(config.Flag.Service.AWS.AccessKey.ID),
-			AccessKeySecret: config.Viper.GetString(config.Flag.Service.AWS.AccessKey.Secret),
+			AccessKeyID:     config.Viper.GetString(config.Flag.Service.AWS.HostAccessKey.ID),
+			AccessKeySecret: config.Viper.GetString(config.Flag.Service.AWS.HostAccessKey.Session),
 			Region:          config.Viper.GetString(config.Flag.Service.AWS.Region),
 		}
 

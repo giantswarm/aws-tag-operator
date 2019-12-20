@@ -5,6 +5,6 @@ import (
 )
 
 type AWS struct {
-	AccessKey accesskey.AccessKey
-	Region    string
+	HostAccessKey accesskey.AccessKey
+	Region        string
 }
