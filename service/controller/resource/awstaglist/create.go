@@ -44,17 +44,6 @@ func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
 		volumes = append(volumes, &vc)
 	}
 
-	i := &ec2.DescribeVolumesInput{}
-	o, err := r.awsClients.EC2Client().DescribeVolumes(i)
-	if err != nil {
-		return microerror.Mask(err)
-	}
-
-	fmt.Printf("Volumes in AWS: \n")
-	for _, v := range o.Volumes {
-		fmt.Println(v.GoString())
-	}
-
 	input := &ec2.CreateTagsInput{
 		Resources: volumes,
 		Tags:      tags,
