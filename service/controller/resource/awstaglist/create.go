@@ -2,7 +2,6 @@ package awstaglist
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/ec2"
@@ -23,7 +22,6 @@ func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
 			Value: aws.String(t.Value),
 		}
 		tags = append(tags, &tag)
-		fmt.Printf("Key: %s, Value: %s\n", t.Key, t.Value)
 	}
 
 	if len(tags) <= 0 {
@@ -35,12 +33,10 @@ func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
 		return microerror.Mask(err)
 	}
 
-	fmt.Printf("Volumes in cluster:\n")
 	volumes := []*string{}
 	for _, pv := range pvList.Items {
 		v := pv.Spec.AWSElasticBlockStore.VolumeID
 		vc := v[len(v)-21:]
-		fmt.Printf("vol: %s\n", vc)
 		volumes = append(volumes, &vc)
 	}
 
@@ -48,13 +44,10 @@ func (r *Resource) EnsureCreated(ctx context.Context, obj interface{}) error {
 		Resources: volumes,
 		Tags:      tags,
 	}
-
-	result, err := r.awsClients.EC2Client().CreateTags(input)
+	_, err = r.awsClients.EC2Client().CreateTags(input)
 	if err != nil {
 		return microerror.Mask(err)
 	}
-
-	fmt.Println(result)
 
 	return nil
 }
